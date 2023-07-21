@@ -5,9 +5,9 @@ This project aims to translate eXplainable AI (XAI) methods developed for image 
 The project was developed within a collaboration between **Assicurazioni Generali Italia**, **ELIS Innovation Hub** and **University Campus Bio-Medico of Rome**. The insurance company deploys the model to be explained, and it is assumed to be a black box that cannot be changed to simulate a real-world scenario.
 
 <p float="left">
-  <img src="docs/generali.png" width="290" />
-  <img src="docs/ucbm.png" width="290" />
-  <img src="docs/elis.png" width="290" />
+  <img src="docs/generali.png" width="250" />
+  <img src="docs/ucbm.png" width="250" />
+  <img src="docs/elis.png" width="250" />
 </p>
 
 ## Installation
