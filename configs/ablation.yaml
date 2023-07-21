@@ -1,0 +1,41 @@
+seed: 42
+exp_name: ablation
+
+device:
+  device_type: gpu
+  worker: cuda:0
+  gpu_num_workers: 32
+
+data:
+  dataset: generali
+  classes:
+    - crash
+    - non_crash
+  fold_dir: ./data/processed/holdout
+  data_dir: ./data/data_raw/holdout
+  interim_dir: ./data/interim/holdout
+  modes:
+    acc:
+      timestamp: 2490
+      channel: 3
+    pos:
+      timestamp: 41
+      channel: 1
+
+model:
+  model_name: cnn_1d_001
+  model_dir: ./models/holdout
+
+trainer:
+  thr_cnn: 0.5061745
+  thr_lstm: 0.23062487
+      
+reports:
+  reports_dir: "./reports/"
+  average_precision_validset: 0.6683073556746463
+  average_precision_validset_cae: 0.6424562482540082
+  ablation_test:
+    acc_ablated:
+      average_precision_validset_drop: 0.3684725207842763
+    pos_ablated:
+      average_precision_validset_drop: 0.015016739075395913

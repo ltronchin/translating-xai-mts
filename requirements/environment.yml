@@ -1,0 +1,26 @@
+name: xai_mts
+channels:
+- defaults
+dependencies:
+- python == 3.9
+- pip
+- pip:
+  - tensorflow
+  - torch
+  - torchvision
+  - torchaudio
+  - numpy
+  - matplotlib
+  - pandas
+  - scipy
+  - DateTime
+  - openpyxl
+  - requests
+  - pathlib
+  - argparse
+  - tqdm
+  - scikit-learn
+  - psutil
+  - pyyaml
+  - lime
+  - seaborn
