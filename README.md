@@ -54,7 +54,7 @@ data_dir: ./data/data_raw/holdout  -> data_dir: ./data_share/data_raw/holdout;
 5) you can use the script **main.py** to obtain explanations from Grad-CAM, LIME, and Integrated Gradients:
 
 ```bash
-python src/main.py.
+python src/main.py
 ```
 
 If something goes wrong, please check the config file and the data path.
