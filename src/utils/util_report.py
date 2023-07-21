@@ -28,7 +28,7 @@ def plot_training(history, plot_training_dir):
         plt.xlabel('Epochs')
         plt.ylabel('Average Negative Log Likelihood')
         plt.legend()
-        plt.savefig(os.path.join(plot_training_dir, "train_val_loss.pdf"), dpi=400, format='pdf')
+        plt.savefig(os.path.join(plot_training_dir, "train_val_loss.png"), dpi=400, format='png')
         plt.show()
     if 'train_acc' in history.columns and 'val_acc' in history.columns:
         plt.figure(figsize=(8, 6))
@@ -39,7 +39,7 @@ def plot_training(history, plot_training_dir):
         plt.ylabel('Average Accuracy')
         plt.ylim([-0.1, 1.1])
         plt.legend()
-        plt.savefig(os.path.join(plot_training_dir, "train_val_acc.pdf"), dpi=400, format='pdf')
+        plt.savefig(os.path.join(plot_training_dir, "train_val_acc.png"), dpi=400, format='png')
         plt.show()
 
 
@@ -115,7 +115,7 @@ def plot_acc(outdir, acc, info='acc', channel=3):
     ax3.set_ylabel('z')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(outdir, f"{info}.pdf"), dpi=400, format='pdf')
+    plt.savefig(os.path.join(outdir, f"{info}.png"), dpi=400, format='png')
     plt.show()
 
 def plot_vel(outdir, vel, info='vel'):
@@ -131,12 +131,12 @@ def plot_vel(outdir, vel, info='vel'):
     ax.set_ylabel('pos')
 
     plt.tight_layout()
-    plt.savefig(os.path.join(outdir, f"{info}.pdf"), dpi=400, format='pdf')
+    plt.savefig(os.path.join(outdir, f"{info}.png"), dpi=400, format='png')
     plt.show()
 
 
 # gradcam/ig
-def plot_heatmap(outdir, acc, heatmap):
+def plot_heatmap(outdir, acc, heatmap, info):
 
     if acc.shape[0] == 1:
         acc = acc.numpy()[0]
@@ -176,7 +176,7 @@ def plot_heatmap(outdir, acc, heatmap):
     ax3.set_ylabel('z')
     plt.tight_layout()
     plt.show()
-    fig.savefig(os.path.join(outdir, f'gradcam_xai.pdf'), format='pdf', dpi=400)
+    fig.savefig(os.path.join(outdir, f'{info}_xai.png'), format='png', dpi=400)
 
 def plot_mts_heatmap(outdir, acc, heatmap, info,channel=3):
     if acc.shape[0] == channel:
@@ -206,7 +206,7 @@ def plot_mts_heatmap(outdir, acc, heatmap, info,channel=3):
     ax4.set_ylabel('heatmap')
 
     plt.tight_layout()
-    fig.savefig(os.path.join(outdir, f'{info}.pdf'), format='pdf', dpi=400)
+    fig.savefig(os.path.join(outdir, f'{info}.png'), format='png', dpi=400)
     plt.show()
 
 # lime
@@ -237,5 +237,5 @@ def heatmap_lime(outdir, acc, mask, info='heatmap_lime'):
     ax3.axis(xmin=0, xmax=2490)
 
     plt.tight_layout()
-    fig.savefig(os.path.join(outdir, f'{info}.pdf'), format='pdf', dpi=400)
+    fig.savefig(os.path.join(outdir, f'{info}.png'), format='png', dpi=400)
     plt.show()

@@ -1,0 +1,12 @@
+### Example user template template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+data
+dissemination
+reports
+models

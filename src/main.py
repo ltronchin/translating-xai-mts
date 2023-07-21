@@ -104,6 +104,10 @@ if __name__ == '__main__':
         if counter > cfg['xai']['n_samples_to_explain']:
             break
         X_acc, X_pos, y, file_names = next(data_iterator)
+        if cfg['xai']['list_samples_to_explain'] is not None:
+            if file_names[0] not in cfg['xai']['list_samples_to_explain']:
+                continue
+
         general_reports_dir_current = os.path.join(general_reports_dir, file_names[0])
         if not os.path.exists(general_reports_dir_current):
             os.makedirs(general_reports_dir_current)
@@ -163,7 +167,7 @@ if __name__ == '__main__':
                     util_report.plot_acc(outdir=general_reports_dir_gradcam, acc=acc_gradcam, info=f'mts_{heatmap_name}')
                     util_report.plot_mts_heatmap(outdir=general_reports_dir_gradcam, acc=acc_gradcam, heatmap=heatmap_perturbed_tilde[:, ax], info=f'mts_heatmap_{heatmap_name}')
 
-            util_report.plot_heatmap(outdir=general_reports_dir_gradcam, acc=X_acc, heatmap=gradcam_heatmap)
+            util_report.plot_heatmap(outdir=general_reports_dir_gradcam, acc=X_acc, heatmap=gradcam_heatmap, info=f'gradcam')
 
         # Integrated gradients
         if 'ig' in cfg['xai']['methods']:
@@ -185,7 +189,7 @@ if __name__ == '__main__':
 
             ig_heatmap, delta, convergence = ig_method.integrated_gradients(X_acc, X_pos, baseline, baseline_vel, class_to_explain, normalize=True)
 
-            util_report.plot_heatmap(outdir=general_reports_dir_ig, acc=X_acc, heatmap=ig_heatmap)
+            util_report.plot_heatmap(outdir=general_reports_dir_ig, acc=X_acc, heatmap=ig_heatmap,  info=f'ig')
             print('network activation using the signal and the baseline: ', delta)
 
         # LIME

@@ -27,7 +27,8 @@ model:
 
 xai:
   step_to_explain: valid
-  n_samples_to_explain: 10
+  n_samples_to_explain: 1000
+  list_samples_to_explain: ['C_89', 'C_90']
   class_to_explain: 2 # ground_truth (0: crash, 1: non_crash, 2: ground_truth, 3: cnn_prediction)
   methods:
     - lime
