@@ -7,9 +7,6 @@ class CNNModel():
         self.weight_filepath = weight_filepath
 
     def load_cnn_model(self):
-        """
-        Funzione per definire la topologia della rete e caricare i pesi
-        """
         model_name = "cnn_1d_001"
         samples_acc = 2490
         samples_pos = 41
