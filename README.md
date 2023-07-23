@@ -44,7 +44,7 @@ For more informations about the requirements, please check the [requirements.txt
 
 ## Usage
 1) In the [yaml file](configs/xai.yaml) under the folder configs, you can find all the settings used for each XAI method as well as other parameters;
-2) We cannot share all the data used in the paper due to privacy reasons. However, we provide dummy samples created as a perturbation of the original signals in the [folder](data_share/data_raw/holdout). Note that the network is assumed to be a black box that we cannot change.
+2) We cannot share all the data used in the paper due to privacy reasons. However, we provide dummy samples created as a perturbation of the original signals in the [folder](data_share/data_raw/holdout). Note that the network is assumed to be a black box that we cannot change;
 3) To run the code, and explain the network on the dummy samples, change in [yaml file](configs/xai.yaml) the following paths:
 ```bash
 fold_dir: ./data/processed/holdout -> fold_dir: ./data_share/processed/holdout;
@@ -56,8 +56,53 @@ data_dir: ./data/data_raw/holdout  -> data_dir: ./data_share/data_raw/holdout;
 ```bash
 python src/main.py
 ```
-
 If something goes wrong, please check the config file and the data path.
+
+### Other datasets
+If you want to use your own dataset, you can follow the steps below:
+1) Create a folder with your own data with the following structure.
+```bash
+data
+├── data_raw
+│   ├── exp-name
+│   │   ├── mode-1
+│   │   │   ├── train
+│   │   │   │   ├── 0.npy
+│   │   │   │   ├── ...
+│   │   │   ├── valid
+│   │   │   │   ├── 10.npy
+│   │   │   │   ├── ...
+│   │   │   ├── test
+│   │   │   │   ├── 42.npy
+│   │   │   │   ├── ...
+│   │   ├── mode-2
+│   │   │   ├── train
+│   │   │   │   ├── 0.npy
+│   │   │   │   ├── ...
+│   │   │   ├── valid
+│   │   │   │   ├── 10.npy
+│   │   │   │   ├── ...
+│   │   │   ├── test
+│   │   │   │   ├── 42.npy
+│   │   │   │   ├── ...
+├── processed
+│   ├── exp-name
+│   │   ├── train.txt
+│   │   ├── valid.txt
+│   │   ├── test.txt
+```
+In data_raw, you can put your data in the form of numpy arrays. In the folder processed, you can put the list of samples to be used for training, validation, and testing. Check the [folder](data_share) for an example and the scripts [here](src/data) for more details;
+
+2) Train your own model using Tensorflow and save the model in the folder **exp-name/models**, under the root directory of the project.  If you want to use PyTorch, you can change the code accordingly;
+4) Change the [yaml file](configs/xai.yaml) accordingly;
+4) Run the script **main.py** to obtain explanations from Grad-CAM, LIME, and Integrated Gradients:
+
+```bash
+python src/main.py
+```
+
+Note that the XAI engine is designed to work with telematics data; each sample contains a multivariate acceleration signal (mode-1) and a univariate speed magnitude signal (mode-2). Also, the XAI methods were adapted to explain the black box model provided by the insurance company. 
+Thus, if your data or architecture are different, you may need to change the code accordingly.
 
 ## Results
 
