@@ -17,3 +17,4 @@ psutil
 pyyaml
 lime
 seaborn
+aeon

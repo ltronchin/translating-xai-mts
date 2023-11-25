@@ -1,0 +1,48 @@
+seed: 42
+exp_name: cae
+
+device:
+  device_type: gpu
+  worker: cuda:0
+  gpu_num_workers: 32
+
+data:
+  dataset: generali
+  classes:
+    - crash
+    - non_crash
+  fold_dir: ./data/processed/
+  data_dir: ./data/data_raw/
+  interim_dir: ./data/interim/
+  modes:
+    acc:
+      timestamp: 2490
+      channel: 3
+    pos:
+      timestamp: 41
+      channel: 1
+
+model_cnn:
+  model_name: cnn_1d_001
+  model_dir: ./models/
+  thr_cnn: 0.5061745
+  thr_lstm: 0.23062487
+
+model_cae:
+  model_name: cae
+  model_dir: ./models/
+
+model_autoencoder:
+  model_name: cae
+  model_dir: ./models/
+  latent_space: 512
+  pretrained: #./models/
+  trainer:
+    batch_size: 64
+    epochs: 200
+    optimizer:
+      name: 'Adam'
+      lr: 0.001
+      
+reports:
+  reports_dir: "./reports/"

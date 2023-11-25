@@ -1,0 +1,57 @@
+seed: 42
+
+device:
+  device_type: gpu
+  worker: cuda:0
+  gpu_num_workers: 32
+
+data:
+  dataset: BasicMotions
+  classes:
+    standing: 0
+    walking: 1
+    running: 2
+    badminton: 3
+  fold_dir: ./data/processed/
+  data_dir: ./data/data_raw/
+  interim_dir: ./data/interim/
+  modes:
+    accelerometer:
+      timestamp: 100
+      channel: 3
+    gyroscope:
+      timestamp: 100
+      channel: 3
+
+model:
+  model_name: mtex_BasicMotions
+  model_dir: ./models/
+
+xai:
+  class_to_explain:  # 'standing'
+  n_samples_to_explain: 10
+  methods:
+    - lime
+    - gradcam
+    - ig
+  lime:
+    num_features: 5  #maximum number of features to be selected (linear regressor parameters) to obtain an explanation
+    num_samples: 1000
+    top_labels: 4  # number of classes to explain for each sample
+    hide_color: 0  # -1 #0 #None
+    random_state: 42  # with the random state of 42 you force the generator to always produce the same numbers
+    feature_selection: 'auto'  # feature_selection: metodo di feature selection
+  gradcam:
+
+  ig:
+    m_steps: 500
+    const_value_acc: 0
+    const_value_vel: 0.1
+
+trainer:
+  thr_cnn: 0.5061745
+  thr_lstm: 0.23062487
+      
+reports:
+  reports_dir: "./reports/"
+  snap: True

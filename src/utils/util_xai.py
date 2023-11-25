@@ -1,6 +1,6 @@
 import numpy as np
 
-def select_explanation(i, acc, vel, label):
+def select_class_to_explain(i, acc, vel, label):
     """Function to define which class to explain:
     0: explains the "crash" class regardless of the prediction from the CNN or the ground truth
     1: explains the "non_crash" class regardless of the prediction from the CNN or the ground truth

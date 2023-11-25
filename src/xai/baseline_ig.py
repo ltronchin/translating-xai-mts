@@ -4,7 +4,7 @@ from utils import util_data
 import torch
 from tqdm import tqdm
 
-class BaselineIntegratedGradients():
+class BaselineIntegratedGradientsCNN:
     def __init__(self, dataset, model_cnn, confidence_thr=0.95, compute_mean = False):
         """
         * For a signal predicted as crash event, we exploit as baseline the zero acceleration signal and the constant speed equal to  0.1 in a normalised scale
@@ -49,7 +49,7 @@ class BaselineIntegratedGradients():
             self.top_reliable_vel = tf.convert_to_tensor(X_pos_list[idx], tf.dtypes.float32)[tf.newaxis, :]
 
     def choose_baseline(self, i=0, input=tf.zeros([1, 2490, 3]), const_value=0.01, min_random=-0.1, max_random=0.1):
-        '''Select the baseline to compute Integrated Gradients
+        """Select the baseline to compute Integrated Gradients
         Args
             i (Int): index of the switcher in order to select the baseline generation method.
             input (Tensor): A 3D or 2D tensor of float with shape (1, 2490, 3) or (1, 41) representing the acceleration signal or
@@ -64,7 +64,7 @@ class BaselineIntegratedGradients():
         Returns:
             baseline (Tensor): A 3D or 2D tensor of floats with shape (1, 2490, 3) or (1, 41) representing the baseline for
                 acceleration signal or speed signal
-        '''
+        """
 
         switcher = {
             0: tf.constant(const_value, shape=input.shape, dtype=tf.dtypes.float32), # Constant values

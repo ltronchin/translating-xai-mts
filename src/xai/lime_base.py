@@ -127,8 +127,7 @@ class LimeBase(object):
                 n_method = 'forward_selection'
             else:
                 n_method = 'highest_weights'
-            return self.feature_selection(data, labels, weights,
-                                          num_features, n_method)
+            return self.feature_selection(data, labels, weights,   num_features, n_method)
 
     def explain_instance_with_data(self,
                                    neighborhood_data,
@@ -173,15 +172,15 @@ class LimeBase(object):
             score is the R^2 value of the returned explanation
             local_pred is the prediction of the explanation model on the original instance
         """
-        # Le distanze dal punto originale (immagine non perturbata)
-        # sono considerate come pesi nell'addestramento del regressore lineare
+        # Distances from the original point (unperturbed image)
+        # are considered as weights in the training of the linear regressor
         weights = self.kernel_fn(distances)
-        # Selezione in neighnorhood_labels di tutte le righe (predizioni per i campioni perturbati) della colonna (classe)
-        # per la quale si vuole la spiegazione. Quindi se avessimo un problema multiclasse neighborhood_labels
-        # sarebbe una matrice di dimensione [num_samples x num_classi] e con "label" selezioneremmo la sola classe per cui
-        # vogliamo addestrare il regressore e da lì ottenere la spiegazione.
-        # In questo caso abbiamo un solo neurone in output con una funzione sigmoide, in uscita si ha solo la probabilità
-        # che il campione sia crash.
+        # Selection in neighborhood_labels of all rows (predictions for perturbed samples) of the column (class)
+        # for which we want the explanation. So if we had a multiclass problem neighborhood_labels
+        # would be a matrix of size [num_samples x num_classes] and with "label" we would select only the class for which
+        # we want to train the regressor and from there get the explanation.
+        # In this case we have a single output neuron with a sigmoid function, output is only the probability
+        # that the sample is a crash.
         labels_column = neighborhood_labels[:, label]
 
         # Feature selection
@@ -190,33 +189,33 @@ class LimeBase(object):
                                                weights,
                                                num_features,
                                                feature_selection)
-        # Definizione del regressore
+        # Definition of the regressor
         if model_regressor is None:
             model_regressor = Ridge(alpha=1, fit_intercept=True,
                                     random_state=self.random_state)
-        # easy_model -- modello facilmente spiegabile
+        # easy_model -- easily explainable model
         easy_model = model_regressor
-        # Addestramento del modello facilmente spiegabile:
-        #   used_features: feature selezionate nel processo di feature selection (utilizza di neighborhood data le sole
-        #   colonne individuate nel processo di feature selection)
+        # Training of the easily explainable model:
+        #   used_features: features selected in the feature selection process (uses from neighborhood data only the
+        #   columns identified in the feature selection process)
         neighborhood_data_selected = neighborhood_data[:, used_features]
 
         easy_model.fit(neighborhood_data_selected, labels_column, sample_weight=weights)
-        # Calcolo di R^2
+        # Calculation of R^2
         prediction_score = easy_model.score(neighborhood_data_selected, labels_column, sample_weight=weights)
 
-        # Predizione sull'immagine non perturbata -- serve per verificare se il regressore effettua le predizioni
-        # come la rete pre-addestrata
+        # Prediction on the unperturbed image -- serves to verify if the regressor makes predictions
+        # like the pre-trained network
         not_perturbed = neighborhood_data[0, used_features].reshape(1, -1)
         local_pred = easy_model.predict(not_perturbed)
 
         if self.verbose:
             print('Intercept', easy_model.intercept_)
-            print('Prediction_local', local_pred,)
+            print('Prediction_local', local_pred, )
             print('Right:', neighborhood_labels[0, label])
 
         local_exp = zip(used_features, easy_model.coef_)
-        local_exp_sorted = sorted(local_exp, key = lambda x: np.abs(x[1]), reverse=True)
+        local_exp_sorted = sorted(local_exp, key=lambda x: np.abs(x[1]), reverse=True)
         return (easy_model.intercept_,
                 local_exp_sorted,
                 prediction_score, local_pred)

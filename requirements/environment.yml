@@ -24,3 +24,4 @@ dependencies:
   - pyyaml
   - lime
   - seaborn
+  - aeon

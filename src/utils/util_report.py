@@ -90,8 +90,8 @@ def append_df_to_excel(filename, dataframe, sheet_name='Sheet1', startrow=None, 
     dataframe.to_excel(writer, sheet_name, startrow=startrow, header=header, **to_excel_kwargs)  # write out the new sheet
     writer.save()  # save the workbook
 
-
-def plot_acc(outdir, acc, info='acc', channel=3):
+# Generali report functions
+def generali_plot_acc(outdir, acc, info='acc', channel=3):
 
     if acc.shape[0] == channel:
         acc = torch.transpose(acc, dim0=0, dim1=1).detach().cpu().numpy()
@@ -118,7 +118,7 @@ def plot_acc(outdir, acc, info='acc', channel=3):
     plt.savefig(os.path.join(outdir, f"{info}.png"), dpi=400, format='png')
     plt.show()
 
-def plot_vel(outdir, vel, info='vel'):
+def generali_plot_vel(outdir, vel, info='vel'):
 
     if vel.shape[0] == 1:
         vel = vel.numpy()[0]
@@ -136,7 +136,7 @@ def plot_vel(outdir, vel, info='vel'):
 
 
 # gradcam/ig
-def plot_heatmap(outdir, acc, heatmap, info):
+def generali_plot_heatmap(outdir, acc, heatmap, info):
 
     if acc.shape[0] == 1:
         acc = acc.numpy()[0]
@@ -178,7 +178,7 @@ def plot_heatmap(outdir, acc, heatmap, info):
     plt.show()
     fig.savefig(os.path.join(outdir, f'{info}_xai.png'), format='png', dpi=400)
 
-def plot_mts_heatmap(outdir, acc, heatmap, info,channel=3):
+def generali_plot_acc_heatmap(outdir, acc, heatmap, info,channel=3):
     if acc.shape[0] == channel:
         acc = torch.transpose(acc, dim0=0, dim1=1).detach().cpu().numpy()
     if acc.shape[0] == 1:
@@ -210,7 +210,7 @@ def plot_mts_heatmap(outdir, acc, heatmap, info,channel=3):
     plt.show()
 
 # lime
-def heatmap_lime(outdir, acc, mask, info='heatmap_lime'):
+def generali_plot_heatmap_lime(outdir, acc, mask, info='heatmap_lime'):
 
     if acc.shape[0] == 1:
         # from Tensofrlow to Numpy
@@ -235,6 +235,110 @@ def heatmap_lime(outdir, acc, mask, info='heatmap_lime'):
     ax3.fill_between(time, np.amin(acc[:, 2]), np.amax(acc[:, 2]), where=mask[:, 2] == 1, facecolor='green',   alpha=0.5)
     ax3.set_ylabel('z')
     ax3.axis(xmin=0, xmax=2490)
+
+    plt.tight_layout()
+    fig.savefig(os.path.join(outdir, f'{info}.png'), format='png', dpi=400)
+    plt.show()
+
+# mts
+def plot_mts(outdir, x, info='mts'):
+
+    if x.shape[0] == 1:
+        x = x.numpy()[0]
+
+    time = np.arange(x.shape[0])
+    num_vars = x.shape[1]  # Number of variables
+    fig, axs = plt.subplots(num_vars, 1, sharex=True)
+
+    for i in range(num_vars):
+        axs[i].plot(time, x[:, i], 'black', linewidth=0.7)
+        axs[i].axis(xmin=0, xmax=time[-1])
+        axs[i].set_ylabel(f'Var {i+1}')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(outdir, f"{info}.png"), dpi=400, format='png')
+    plt.show()
+
+def plot_mts_heatmap(outdir, x, heatmap, info, channel=None):
+
+    if x.shape[0] == channel:
+        x = torch.transpose(x, dim0=0, dim1=1).detach().cpu().numpy()
+    if x.shape[0] == 1:
+        x = x.numpy()[0]
+
+    time = np.arange(x.shape[0])
+    num_vars = x.shape[1]  # Number of variables
+    fig, axs = plt.subplots(num_vars + 1, 1, sharex=True)
+
+    for i in range(num_vars):
+        axs[i].plot(time, x[:, i], 'black', linewidth=0.7)
+        axs[i].axis(xmin=0, xmax=time[-1])
+        axs[i].set_ylabel(f'var{i+1}')
+
+    axs[-1].plot(time, heatmap, 'red', linewidth=1)
+    axs[-1].axis(xmin=0, xmax=time[-1])
+    axs[-1].set_ylabel('heatmap')
+
+    plt.tight_layout()
+    fig.savefig(os.path.join(outdir, f'{info}.png'), format='png', dpi=400)
+    plt.show()
+
+
+def plot_heatmap(outdir, x, heatmap, info):
+
+    if x.shape[0] == 1:
+        # from Tensofrlow to Numpy
+        x = x.numpy()[0]
+    if heatmap.shape[-1] == 1:
+        heatmap = heatmap[:,:,0]
+
+    time = np.arange(x.shape[0])
+    num_vars = x.shape[1]
+
+    # Normalization between 0 and 1
+    x_min, x_max = np.min(x), np.max(x)
+    x_norm = (x - x_min) / (x_max - x_min)
+
+    fig, axs = plt.subplots(num_vars, 1, sharex=True)
+
+    for i in range(num_vars):
+        x_norm_i = x_norm[:, i]
+        heatmap_i = np.expand_dims(np.array(heatmap[:, i]), axis=1)
+
+        axs[i].plot(time, x_norm_i, color='black', linewidth=1)
+        sns.heatmap(
+            heatmap_i.transpose(),
+            ax=axs[i],
+            cmap='Reds',
+            xticklabels=False,
+            yticklabels=False,
+            vmin=0,
+            vmax=1,
+            cbar=False)
+
+        axs[i].axis(ymin=0, ymax=1)
+        axs[i].set_ylabel('dim' + str(i + 1))
+
+    plt.tight_layout()
+    plt.show()
+    fig.savefig(os.path.join(outdir, f'{info}_xai.png'), format='png', dpi=400)
+
+def plot_heatmap_lime(outdir, x, mask, info='heatmap_lime'):
+
+    if x.shape[0] == 1:
+        x = x.numpy()[0]
+    x = x[:,:,0]
+    time = np.arange(x.shape[0])
+    num_vars = x.shape[1]
+
+    fig, axs = plt.subplots(num_vars, 1)
+
+    for i in range(num_vars):
+        axs[i].plot(time, x[:, i], color='black', linewidth=1)
+        axs[i].fill_between(time, np.amin(x[:, i]), np.amax(x[:, i]), where=mask[:, i] == 1, facecolor='green', alpha=0.5)
+        axs[i].set_ylabel('dim' + str(i + 1))
+        if i != num_vars - 1:
+            axs[i].get_xaxis().set_ticks([])
 
     plt.tight_layout()
     fig.savefig(os.path.join(outdir, f'{info}.png'), format='png', dpi=400)

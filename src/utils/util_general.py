@@ -7,18 +7,6 @@ import openpyxl
 import torch
 import requests
 
-def idx_to_class_generali(class_id):
-    if class_id == 1:
-        return 'crash'
-    elif class_id == 0:
-        return 'non_crash'
-
-def class_to_idx_generali(class_name):
-    if class_name == 'crash':
-        return 1
-    elif class_name == 'non_crash':
-        return 0
-
 def notification_ifttt(info):
     private_key = "isnY23hWBGyL-mF7F18BUAC-bGAN6dx1UAPoqnfntUa"
     url = "https://maker.ifttt.com/trigger/Notification/json/with/key/" + private_key

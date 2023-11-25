@@ -1,0 +1,36 @@
+seed: 42
+exp_name: mtex_basicmotions
+
+device:
+  device_type: gpu
+  worker: cuda:0
+  gpu_num_workers: 32
+
+data:
+  dataset: BasicMotions
+  classes:
+    standing: 0
+    walking: 1
+    running: 2
+    badminton: 3
+  fold_dir: ./data/processed/
+  data_dir: ./data/data_raw/
+  interim_dir: ./data/interim/
+  modes:
+    accelerometer:
+      timestamp: 100
+      channel: 3
+    gyroscope:
+      timestamp: 100
+      channel: 3
+
+model:
+  model_name: mtex
+  model_dir: ./models/
+
+trainer:
+  epochs: 100
+  batch_size: 32
+      
+reports:
+  reports_dir: "./reports/"
